@@ -1,3 +1,5 @@
+## Values, Types and Operators
+
 1. pick 4 different numbers and write them out in 8 bit form:
 example 13:
 00001101
