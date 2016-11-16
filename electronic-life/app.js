@@ -56,6 +56,40 @@ function randomElement (array) {
 
 var directionNames = Object.keys(directions);
 
+function View (world, vector) {
+  this.world = world;
+  this.vector = vector;
+}
+View.prototype.look = function (direction) {
+  var target = this.vector.plus(directions[dir]);
+
+  if (this.world.grid.isInside(target)) {
+    return characterFromElement(this.world.grid.get(target));
+  }
+
+  return '#'
+};
+View.prototype.findAll = function (character) {
+  var found = [];
+
+  for (var direction in directions) {
+    if (this.look(direction) = character) {
+      found.push(direction);
+    }
+  }
+
+  return found;
+};
+View.prototype.find = function (character) {
+  var found = this.findAll(character);
+
+  if (found.length == 0) {
+    return null;
+  }
+
+  return randomElement(found);
+};
+
 function BouncingCritter () {
   this.direction = randomElement(directionNames);
 }
