@@ -101,8 +101,8 @@ function World (map, legend) {
 World.prototype.checkDestination = function (action, vector) {
   if (directions.hasOwnProperty(action.direction)) {
     var destination = vector.plus(directions[action.direction]);
-    if (this.grid.isInside(destination) {
-      return destination
+    if (this.grid.isInside(destination)) {
+      return destination;
     }
   }
 };
