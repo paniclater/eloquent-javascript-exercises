@@ -37,6 +37,17 @@ Grid.prototype.get = function (vector) {
 Grid.prototype.set = function (vector, value) {
   this.space[vector.x + this.width * vector.y] = value;
 };
+Grid.prototype.forEach = function (callback, context) {
+  for (var y = 0; y < this.height; y++) {
+    for (var x = 0; x < this.width; x++) {
+      var value = this.space[x + y * this.width];
+      if (value != null) {
+        //take a sec to talk about .call
+        callback.call(context, value, new Vector(x, y));
+      }
+    }
+  }
+}
 
 //BOUNCING CRITTER
 var directions = {
