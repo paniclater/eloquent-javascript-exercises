@@ -10,6 +10,10 @@ var directions = {
   northWest: new Vector(-1, -1)
 };
 var directionNames = Object.keys(directions);
+function directionPlus (direction, modifier) {
+  var index = directionNames.indexOf(direction);
+  return directionNames[(index + modifier + 8) % 8];
+}
 
 //RANDOM ELEMENT FROM ARRAY
 function randomElement (array) {
@@ -54,7 +58,6 @@ Grid.prototype.forEach = function (callback, context) {
   }
 }
 
-
 function View (world, vector) {
   this.world = world;
   this.vector = vector;
@@ -94,18 +97,36 @@ function BouncingCritter () {
 }
 BouncingCritter.prototype.act = function (view) {
   if (view.look(this.direction) != ' ') {
-    this.direction = view.find(' ') || 's';
+    this.direction = view.find(' ') || 'south';
   }
 
   return {
     type: 'move',
     direction: this.direction
   };
+
 };
+
+function WallFollower () {
+  this.direction = 'south';
+}
+WallFollower.prototype.act = function (view) {
+  var start = this.direction;
+  if (view.look(directionPlus(this.direction, -3)) != ' ') {
+    start = this.direction = directionPlus(this.direction, -2);
+  }
+  while (view.look(this.direction) != ' ') {
+    this.direction = directionPlus(this.direction, 1);
+    if (this.direction == start) break;
+  }
+  return { type: 'move', direction: this.direction };
+};
+
 function Wall () {}
 
 var legend = {
   '#': Wall,
+  '~': WallFollower,
   'o': BouncingCritter
 };
 
@@ -189,7 +210,7 @@ World.prototype.toString = function () {
 
 //INSTANTIATE & ANIMATE
 var plan = ["############################",
-            "#      #    #      o      ##",
+            "#~      #    #      o      ##",
             "#                          #",
             "#          #####           #",
             "##         #   #    ##     #",
