@@ -72,7 +72,7 @@ function View (world, vector) {
   this.vector = vector;
 }
 View.prototype.look = function (direction) {
-  var target = this.vector.plus(directions[dir]);
+  var target = this.vector.plus(directions[direction]);
 
   if (this.world.grid.isInside(target)) {
     return characterFromElement(this.world.grid.get(target));
