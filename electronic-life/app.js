@@ -98,6 +98,34 @@ function World (map, legend) {
     }
   });
 }
+World.prototype.checkDestination = function (action, vector) {
+  if (directions.hasOwnProperty(action.direction)) {
+    var destination = vector.plus(directions[action.direction]);
+    if (this.grid.isInside(destination) {
+      return destination
+    }
+  }
+};
+World.prototype.letAct = function (critter, vector) {
+  var action = critter.act(new View(this, vector));
+  // this is defensive programming, explain why with burnItAllDown method
+  if (action && action.type == 'move') {
+    var destination = this.checkDestination(action, vector);
+    if (destination && this.grid.get(destination) == null) {
+      this.grid.set(vector, null);
+      this.grid.set(destination, critter);
+    }
+  }
+};
+World.prototype.turn = function () {
+  var acted = [];
+  this.grid.forEach(function (critter, vector) {
+    if (critter.act && acted.indexOf(critter) == -1) {
+      acted.push(critter);
+      this.letAct(critter, vector);
+    }
+  }, this);
+};
 World.prototype.toString = function () {
   var output = '';
   for (var y = 0; y < this.grid.height; y++) {
