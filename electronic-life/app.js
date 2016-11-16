@@ -97,6 +97,7 @@ BouncingCritter.prototype.act = function (view) {
   if (view.look(this.direction) != ' ') {
     this.direction = view.find(' ') || 's';
   }
+
   return {
     type: 'move',
     direction: this.direction
@@ -108,7 +109,9 @@ function elementFromCharacter (legend, character) {
   if (character == ' ') {
     return null
   }
+
   var element = new legend[character]();
+
   element.originalCharacter = character;
   return element;
 }
@@ -123,6 +126,7 @@ function characterFromElement (element) {
 
 function World (map, legend) {
   var grid = new Grid(map[0].length, map.length);
+
   this.grid = grid;
   this.legend = legend;
 
@@ -135,6 +139,7 @@ function World (map, legend) {
 World.prototype.checkDestination = function (action, vector) {
   if (directions.hasOwnProperty(action.direction)) {
     var destination = vector.plus(directions[action.direction]);
+
     if (this.grid.isInside(destination)) {
       return destination;
     }
@@ -142,9 +147,11 @@ World.prototype.checkDestination = function (action, vector) {
 };
 World.prototype.letAct = function (critter, vector) {
   var action = critter.act(new View(this, vector));
+
   // this is defensive programming, explain why with burnItAllDown method
   if (action && action.type == 'move') {
     var destination = this.checkDestination(action, vector);
+
     if (destination && this.grid.get(destination) == null) {
       this.grid.set(vector, null);
       this.grid.set(destination, critter);
@@ -153,6 +160,7 @@ World.prototype.letAct = function (critter, vector) {
 };
 World.prototype.turn = function () {
   var acted = [];
+
   this.grid.forEach(function (critter, vector) {
     if (critter.act && acted.indexOf(critter) == -1) {
       acted.push(critter);
@@ -162,9 +170,11 @@ World.prototype.turn = function () {
 };
 World.prototype.toString = function () {
   var output = '';
+
   for (var y = 0; y < this.grid.height; y++) {
     for (var x = 0; x < this.grid.width; x++) {
       var element = this.grid.get(new Vector(x, y));
+
       output += characterFromElement(element)
     }
     output += '\n';
