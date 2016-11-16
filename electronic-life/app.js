@@ -1,16 +1,22 @@
-var plan = ["############################",
-            "#      #    #      o      ##",
-            "#                          #",
-            "#          #####           #",
-            "##         #   #    ##     #",
-            "###           ##     #     #",
-            "#           ###      #     #",
-            "#   ####                   #",
-            "#   ##       o             #",
-            "# o  #         o       ### #",
-            "#    #                     #",
-            "############################"];
-//PLAN
+//DIRECTIONS
+var directions = {
+  north:     new Vector(0, -1),
+  northEast: new Vector(1, -1),
+  east:      new Vector(1, 0),
+  southEast: new Vector(1, 1),
+  south:     new Vector(0, 1),
+  southWest: new Vector(-1, 1),
+  west:      new Vector(-1, 0),
+  northWest: new Vector(-1, -1)
+};
+var directionNames = Object.keys(directions);
+
+//RANDOM ELEMENT FROM ARRAY
+function randomElement (array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+//VECTOR && GRID
 function Vector (x, y) {
   this.x = x;
   this.y = y;
@@ -19,7 +25,6 @@ Vector.prototype.plus = function (other) {
   return new Vector(this.x + other.x, this.y + other.y);
 };
 
-//GRID
 function Grid (width, height) {
   this.space = new Array(width * height);
   this.width = width;
@@ -49,23 +54,6 @@ Grid.prototype.forEach = function (callback, context) {
   }
 }
 
-//BOUNCING CRITTER
-var directions = {
-   'n': new Vector(0, -1),
-  'ne': new Vector(1, -1),
-   'e': new Vector(1, 0),
-  'se': new Vector(1, 1),
-   's': new Vector(0, 1),
-  'sw': new Vector(-1, 1),
-   'w': new Vector(-1, 0),
-  'nw': new Vector(-1, -1)
-};
-
-function randomElement (array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-var directionNames = Object.keys(directions);
 
 function View (world, vector) {
   this.world = world;
@@ -84,7 +72,7 @@ View.prototype.findAll = function (character) {
   var found = [];
 
   for (var direction in directions) {
-    if (this.look(direction) = character) {
+    if (this.look(direction) == character) {
       found.push(direction);
     }
   }
@@ -113,6 +101,12 @@ BouncingCritter.prototype.act = function (view) {
     type: 'move',
     direction: this.direction
   };
+};
+function Wall () {}
+
+var legend = {
+  '#': Wall,
+  'o': BouncingCritter
 };
 
 //WORLD
@@ -193,13 +187,26 @@ World.prototype.toString = function () {
   return output;
 }
 
-function Wall () {}
+//INSTANTIATE & ANIMATE
+var plan = ["############################",
+            "#      #    #      o      ##",
+            "#                          #",
+            "#          #####           #",
+            "##         #   #    ##     #",
+            "###           ##     #     #",
+            "#           ###      #     #",
+            "#   ####                   #",
+            "#   ##       o             #",
+            "# o  #         o       ### #",
+            "#    #                     #",
+            "############################"];
+var world = new World(plan, legend);
+var pre = document.createElement('pre');
+pre.id = 'container';
+document.body.appendChild(pre);
+var container = document.getElementById('container');
 
-var legend = {
-  '#': Wall,
-  'o': BouncingCritter
-};
-
-//var world = new World(plan, legend)
-
-
+setInterval(function () {
+  world.turn();
+  container.innerHTML = world.toString();
+}, 333);
