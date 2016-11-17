@@ -208,6 +208,11 @@ World.prototype.toString = function () {
   return output;
 }
 
+function LifelikeWorld (map, legend) {
+  World.call(this, map, legend);
+}
+LifelikeWorld.prototype = Object.create(World.prototype)
+
 //INSTANTIATE & ANIMATE
 var plan = ["############################",
             "#~      #    #      o      ##",
@@ -221,7 +226,7 @@ var plan = ["############################",
             "# o  #         o       ### #",
             "#    #                     #",
             "############################"];
-var world = new World(plan, legend);
+var world = new LifelikeWorld(plan, legend);
 var pre = document.createElement('pre');
 pre.id = 'container';
 document.body.appendChild(pre);
