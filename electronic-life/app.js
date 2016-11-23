@@ -145,10 +145,39 @@ Plant.prototype.act = function (view) {
   }
 };
 
+function PlantEater () {
+  this.energy = 20;
+}
+PlantEater.prototype.act = function (view) {
+  var space = view.find(' ');
+  if (this.energy > 60 && space) {
+    return {
+      type: 'reproduce',
+      direction: space
+    };
+  }
+  var plant = view.find('*');
+
+  if (plant) {
+    return {
+      type: 'eat',
+      direction: plant
+    }
+  }
+
+  if (space) {
+    return {
+      type: 'move',
+      direction: space
+    };
+  }
+};
+
 var legend = {
   '#': Wall,
-  '~': WallFollower,
-  'o': BouncingCritter,
+  'X': PlantEater,
+//  '~': WallFollower,
+//  'o': BouncingCritter,
   "*": Plant
 };
 
@@ -296,16 +325,16 @@ LifelikeWorld.prototype.letAct = function (critter, vector) {
 
 //INSTANTIATE & ANIMATE
 var plan = ['############################',
-            '#~      #    #      o      #',
+            '#X      #    #      *****  #',
             '#    *                     #',
-            '#          #####           #',
-            '##         #   #    ##     #',
+            '#          #####    **     #',
+            '##         #   #    ##**   #',
             '###           ##     #     #',
             '#           ###      #     #',
             '#   ####                   #',
-            '#   ##       o             #',
-            '# o  #         o       ### #',
-            '#    #                     #',
+            '#   ##       X    ****     #',
+            '# X  #         X       ### #',
+            '#    #              **     #',
             '############################'];
 var world = new LifelikeWorld(plan, legend);
 var pre = document.createElement('pre');
