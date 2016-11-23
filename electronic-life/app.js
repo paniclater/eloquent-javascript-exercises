@@ -315,7 +315,7 @@ LifelikeWorld.prototype.letAct = function (critter, vector) {
                 actionTypes[action.type].call(this, critter, vector, action);
 
   if (!handled) {
-    critter.energy -= -0.2;
+    critter.energy -= 0.2;
   }
   if (critter.energy <= 0) {
     this.grid.set(vector, null)
